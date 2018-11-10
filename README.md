@@ -7,6 +7,5 @@ This repository holds contracts for an ICO. The ICO rules are the following:
 3. The price of ETH is get from some exchange some times per predefined time interval.
 4. Once the softcap is reached the contributed amount is sent to the beneficiaries.
 
+This contract holds both the contract and the crowdsale contracts.
 
-
-The token is deployed in the mainnet at the address: 0xcC1188e0ffF6cff5143FDEb272Cc49c45fac75A3
