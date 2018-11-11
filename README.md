@@ -9,3 +9,6 @@ This repository holds contracts for an ICO. The ICO rules are the following:
 
 This contract holds both the contract and the crowdsale contracts.
 
+# Disclaimer
+
+I don't have any connection with the HKK, I'm not responsible for any kind of issue with this company.
