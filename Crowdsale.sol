@@ -1,11 +1,12 @@
 pragma solidity ^0.4.24;
-import "./ERC20Token.sol";
+import "./Token.sol";
 //author: Alexander Shevtsov randmlogin76@gmail.com
 
 //Crowdsal
 contract Crowdsale is Owned {
 
     mapping(address => uint) contributions;
+    mapping(address => uint) contributionsUSD;
 
     Token public token; //the token to be distributed
     uint public ETHUSD; //pulled from exchange
@@ -109,8 +110,17 @@ contract Crowdsale is Owned {
 
     //Only full amount of Ether can be sent back to the contributor
     function returnEther(address _contributor) only(owner) public payable {
-        require(contributor.send(contributions[contributor]));
+        require(_contributor.send(contributions[_contributor]));
+        contributions[_contributor] = 0;
+        contributionsUSD[_contributor] = 0;
         token.unMint(_contributor);
     }
+
+    function withdrawContributed() only(owner) public {
+        require(softCapReached);
+        require(beneficiaries[0].send(address(this).balance/2));
+        require(beneficiaries[1].send(address(this).balance));
+    }
+
 
 }

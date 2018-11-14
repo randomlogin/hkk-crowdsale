@@ -155,10 +155,10 @@ contract Token is Owned {
     }
 
     function unMint(address _who) public {
-        require(balances[who] > 0);
+        require(balances[_who] > 0);
         require(mintable);
         require(msg.sender == owner || msg.sender == crowdsale);
-        balances[who] = 0;
+        balances[_who] = 0;
     }
 
 
