@@ -61,6 +61,7 @@ contract Token is Owned {
     uint8 public decimals;
     uint public totalSupply;
     address public crowdsale;
+    bool public mintable = true; //transferrable if not mintable
 
     event Transfer(address indexed _from, address indexed _to, uint _value);
     event Approval(address indexed _owner, address indexed _spender, uint _value);
@@ -78,6 +79,7 @@ contract Token is Owned {
     }
 
     function transfer(address _to, uint _value) public returns (bool success) {
+        require(!mintable);
         require(_to != address(0));
         balances[msg.sender] = balances[msg.sender].sub(_value);
         balances[_to] = balances[_to].add(_value);
@@ -86,6 +88,7 @@ contract Token is Owned {
     }
 
     function transferFrom(address _from, address _to, uint _value) public returns (bool success) {
+        require(!mintable);
         require(_to != address(0));
         balances[_from] = balances[_from].sub(_value);
         balances[_to] = balances[_to].add(_value);
@@ -129,6 +132,7 @@ contract Token is Owned {
 
     function mint(address _to, uint _amount) public returns(bool) {
         require(msg.sender == owner || msg.sender == crowdsale);
+        require(mintable);
         totalSupply = totalSupply.add(_amount);
         balances[_to] = balances[_to].add(_amount);
         emit Transfer(msg.sender, _to, _amount);
@@ -144,5 +148,18 @@ contract Token is Owned {
         }
         return(i);
     }
+
+    function deactivateMint() only(owner) public {
+        require(mintable);
+        mintable = false;
+    }
+
+    function unMint(address _who) public {
+        require(balances[who] > 0);
+        require(mintable);
+        require(msg.sender == owner || msg.sender == crowdsale);
+        balances[who] = 0;
+    }
+
 
 }
