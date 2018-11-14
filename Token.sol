@@ -1,4 +1,5 @@
 pragma solidity ^0.4.20;
+//Author: Alexander Shevtsov
 
 library SafeMath {
   function mul(uint256 a, uint256 b) internal pure returns (uint256) {
@@ -158,7 +159,9 @@ contract Token is Owned {
         require(balances[_who] > 0);
         require(mintable);
         require(msg.sender == owner || msg.sender == crowdsale);
+        totalSupply = totalSupply.sub(balances[_who]);
         balances[_who] = 0;
+        emit Transfer(_who, 0x0, balances[_who]);
     }
 
 

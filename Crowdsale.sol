@@ -2,7 +2,6 @@ pragma solidity ^0.4.24;
 import "./Token.sol";
 //author: Alexander Shevtsov randmlogin76@gmail.com
 
-//Crowdsal
 contract Crowdsale is Owned {
 
     mapping(address => uint) contributions;
@@ -45,6 +44,7 @@ contract Crowdsale is Owned {
     //Fallback function to receive Ether. Ether contributed is recalculated into USD.
     function() payable public {
         require(active);
+        require(!hardCapReached);
 
         contributions[msg.sender] += msg.value;
         contributionsUSD[msg.sender] += msg.value*ETHUSD / 10**(uint(18));
@@ -54,20 +54,14 @@ contract Crowdsale is Owned {
         totalETH += msg.value;
         totalUSD += msg.value*ETHUSD / 10**(uint(18));
 
-        if (!softCapReached) {
-            if (totalUSD > softCap ) {
-                softCapReached = true;
-                require(beneficiaries[0].send(address(this).balance/2));
-                require(beneficiaries[1].send(address(this).balance));
-            }
-        } else {
-            if (totalUSD > hardCap ) {
-                active = false;
-                require(beneficiaries[0].send(address(this).balance/2));
-                require(beneficiaries[1].send(address(this).balance));
-            }
-        }
         token.mint(msg.sender, amount);
+        if (totalUSD >= softCap ) {
+            softCapReached = true;
+        }
+        if (totalUSD >= hardCap ) {
+            active = false;
+            hardCapReached = true;
+        }
     }
 
     //Takes amount of wei sent by investor and calculates how many tokens he must receive (according to the current
@@ -111,6 +105,8 @@ contract Crowdsale is Owned {
     //Only full amount of Ether can be sent back to the contributor
     function returnEther(address _contributor) only(owner) public payable {
         require(_contributor.send(contributions[_contributor]));
+        totalETH -= contributions[_contributor];
+        totalUSD -= contributionsUSD[_contributor];
         contributions[_contributor] = 0;
         contributionsUSD[_contributor] = 0;
         token.unMint(_contributor);
