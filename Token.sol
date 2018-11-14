@@ -1,5 +1,8 @@
 pragma solidity ^0.4.20;
-//Author: Alexander Shevtsov
+//Author: Alexander Shevtsov 
+//email: randomlogin76@gmail.com
+//date published: 14 November 2018
+//https://github.com/randomlogin/hkk-crowdsale
 
 library SafeMath {
   function mul(uint256 a, uint256 b) internal pure returns (uint256) {
@@ -62,6 +65,7 @@ contract Token is Owned {
     uint8 public decimals;
     uint public totalSupply;
     address public crowdsale;
+
     bool public mintable = true; //transferrable if not mintable
 
     event Transfer(address indexed _from, address indexed _to, uint _value);

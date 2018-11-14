@@ -1,6 +1,9 @@
 pragma solidity ^0.4.24;
 import "./Token.sol";
 //author: Alexander Shevtsov randmlogin76@gmail.com
+//email: randomlogin76@gmail.com
+//date published: 14 November 2018
+//https://github.com/randomlogin/hkk-crowdsale
 
 contract Crowdsale is Owned {
 
@@ -10,8 +13,8 @@ contract Crowdsale is Owned {
     Token public token; //the token to be distributed
     uint public ETHUSD; //pulled from exchange
 
-    uint public hardCap = 1000000000000000000000000; //in usd  
-    uint public softCap = 200000000000000000000000; //in usd
+    uint public hardCap = 1000000000000000000000000; //in usd*10**18
+    uint public softCap = 200000000000000000000000; //in usd*10**18
     bool public active = false;
 
     bool public softCapReached;
@@ -36,7 +39,7 @@ contract Crowdsale is Owned {
         require(prices.length == timestamps.length);
         owner = _owner;
         updater = _updater;
-        beneficiaries.push(0x8A0Dee4fB57041Da7104372004a9Fd80A5aC9716);
+        beneficiaries.push(0x8A0Dee4fB57041Da7104372004a9Fd80A5aC9716); //a bit of hardcode
         beneficiaries.push(0x049d1EC8Af5e1C5E2b79983dAdb68Ca3C7eb37F4);
     }
 
