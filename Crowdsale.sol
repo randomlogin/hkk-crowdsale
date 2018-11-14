@@ -1,10 +1,14 @@
 pragma solidity ^0.4.24;
 import "./ERC20Token.sol";
+//author: Alexander Shevtsov randmlogin76@gmail.com
 
+//Crowdsal
 contract Crowdsale is Owned {
 
-    Token public token;
-    uint public ETHUSD;
+    mapping(address => uint) contributions;
+
+    Token public token; //the token to be distributed
+    uint public ETHUSD; //pulled from exchange
 
     uint public hardCap = 1000000000000000000000000; //in usd  
     uint public softCap = 200000000000000000000000; //in usd
@@ -13,24 +17,11 @@ contract Crowdsale is Owned {
     bool public softCapReached;
     bool public hardCapReached;
 
-    uint public totalUSD;
-    uint public totalETH;
+    uint public totalUSD; //total USD contributed, via the rate at the moment it was contributed
+    uint public totalETH; //total ETH contributed (may be redudnant)
 
-    //hardcoded beneficiaries, they recieve half of all contributed amount
-    //address[] beneficiaries; 
-    address[] public beneficiaries; 
-
-    address public updater;
-    //timestamps
-    //uint 1544140800;// 7 december
-
-    //uint 1544313600; // 9 december
-    //uint 1545523200;// 23 december
-    //uint 1546819200; // 7 january 2019
-    //uint 1547942400; //20 january
-    //uint 1549238400; // 4 february
-    //uint 1550361600; // 17 february
-    //uint 1551398400; // 1 March
+    address[] public beneficiaries; //hardcoded beneficiaries, they recieve half of all contributed amount
+    address public updater; //the address who is eligible to update the ETH/USD price
 
     uint[] public timestamps = [1544313600, 1545523200, 1546819200, 1547942400, 1549238400, 1550361600, 1551398400];
     uint[] public prices = [1000, 1428, 1666, 1739, 1818, 1904, 2000];
@@ -49,8 +40,14 @@ contract Crowdsale is Owned {
         beneficiaries.push(0x049d1EC8Af5e1C5E2b79983dAdb68Ca3C7eb37F4);
     }
 
+
+    //Fallback function to receive Ether. Ether contributed is recalculated into USD.
     function() payable public {
         require(active);
+
+        contributions[msg.sender] += msg.value;
+        contributionsUSD[msg.sender] += msg.value*ETHUSD / 10**(uint(18));
+
         uint amount = calculateTokens(msg.value);
 
         totalETH += msg.value;
@@ -108,6 +105,12 @@ contract Crowdsale is Owned {
     function deactivate() only(owner) public {
         require(active);
         active = false;
+    }
+
+    //Only full amount of Ether can be sent back to the contributor
+    function returnEther(address _contributor) only(owner) public payable {
+        require(contributor.send(contributions[contributor]));
+        token.unMint(_contributor);
     }
 
 }
