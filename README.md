@@ -54,6 +54,12 @@ It's the crowdsale contract which is reponsible for minting tokens in automatic 
 8. Ether can be returned to contributor by owner via `returnEther`. It's done if the contributor purchased tokens, but failed to pass the
    KYC. In this case the address who sent the contribution receives the full amount of Ether he sent, his tokens are
    `unMinted`. 
+   
+## In the wild
+
+Token contract: https://etherscan.io/address/0x235fba75ffda1c27a6b8ce13b5a4b6d0370dbaad
+Crowdsale contract: https://etherscan.io/address/0x93a0b6206b2854866f9344e9c48a6b903b218779
+
 
 # Disclaimer
 
