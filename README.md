@@ -58,6 +58,7 @@ It's the crowdsale contract which is reponsible for minting tokens in automatic 
 ## In the wild
 
 Token contract: https://etherscan.io/address/0x235fba75ffda1c27a6b8ce13b5a4b6d0370dbaad
+
 Crowdsale contract: https://etherscan.io/address/0x93a0b6206b2854866f9344e9c48a6b903b218779
 
 
